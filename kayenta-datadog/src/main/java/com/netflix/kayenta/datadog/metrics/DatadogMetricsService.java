@@ -84,7 +84,11 @@ public class DatadogMetricsService implements MetricsService {
                            CanaryScope canaryScope) {
     DatadogCanaryMetricSetQueryConfig queryConfig = (DatadogCanaryMetricSetQueryConfig)canaryMetricConfig.getQuery();
 
-    return queryConfig.getMetricName() + "{" + canaryScope.getScope() + "}";
+    if (queryConfig.getMetricName().contains("{?}")) {
+      return queryConfig.getMetricName().replace("{?}", "{" + canaryScope.getScope() + "}");
+    } else {
+      return queryConfig.getMetricName() + "{" + canaryScope.getScope() + "}";
+    }
   }
 
   @Override
